@@ -17,8 +17,8 @@ jobs:
   displayName: 'Build'
   pool:
     name: Default # Replace MySelfHostedAgentPool with the name of your self-hosted agent pool
-    demands: # Add specific demands if required for your self-hosted agent
-      - Agent.Name -equals MONEYKICKS # Replace MySelfHostedAgent with the name of your self-hosted agent
+    demands: 
+      - Agent.Name -equals MONEYKICKS 
   steps:
   - task: DotNetCoreCLI@2
     displayName: 'Restore'
@@ -32,10 +32,17 @@ jobs:
       command: build
       projects: '$(RestoreBuildProjects)'
       arguments: '--configuration $(buildConfiguration)'
-      
+
   - task: DotNetCoreCLI@2
     displayName: Publish
     inputs:
       command: publish
       publishWebProjects: True
       arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory)'
+  
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)'
+    condition: succeededOrFailed()
+
