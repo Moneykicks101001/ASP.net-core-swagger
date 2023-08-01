@@ -6,7 +6,10 @@
 trigger:
   branches:
     include:
-      - master
+      - azure-pipelines
+
+variables:
+  buildConfiguration: 'Release'
 
 jobs:
 - job: Build
